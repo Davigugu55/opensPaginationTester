@@ -1,10 +1,14 @@
 ## Overview
 
-The Call Report Data Fetcher is a Python script designed to interact with an API to fetch call report data. It retrieves call records based on specified parameters such as date range and queues, processes the data, and saves it to a CSV file for further analysis. This tool is useful for businesses that need to analyze call data for performance metrics, reporting, or compliance.
+The Call Report Data Fetcher is a Python script designed to interact with [Opens Yunique API](https://docs.yunique.com.br/) to fetch call report data. 
+
+It retrieves call records based on specified parameters such as date range and queues, processes the data, and saves it to a CSV file for further analysis. Enabling us to compare the [Call Analitycs Queue Report with Pagination](https://docs.yunique.com.br/#ced1a612-66e9-4f41-ba7a-df44312762a7) with the [Call Synthetic Queue Report](https://docs.yunique.com.br/#5e48ea0d-d047-4612-aa2f-4602a63b9c15)
+
+This tool is useful for businesses that use [Opens' Yunique Omnichannel Platform](https://www.opens.com.br/omnichannel), that they need to analyze call data for performance metrics, reporting, or compliance.
 
 ## Features
 
-- Fetches call data from a specified API endpoint.
+- Fetches call data from Yunique Analitycs and Synthetic API endpoints.
 - Supports pagination to retrieve large datasets.
 - Extracts relevant fields from the API response.
 - Saves the fetched data to a CSV file with a formatted filename based on the date range.
