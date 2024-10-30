@@ -4,7 +4,7 @@ import time
 from dotenv import load_dotenv
 import os
 import logging
-import json
+import urllib.parse
 
 # Load environment variables from .env file
 load_dotenv()
@@ -41,7 +41,7 @@ def fetch_queue_performance(api_token, company_id, start_date, end_date, queues,
         json_data = response.json()
 
         print('\n')
-        print(response.url)
+        print( urllib.parse.unquote( response.url ) )
         print('documentCount: ' + str(json_data['documentCount']))
         print('\n')
 
@@ -71,7 +71,7 @@ def fetch_page(api_token, limit, start_date, end_date, queues, search_after, com
 
         if not response.json().get('sort'):
             print('\n')
-            print(response.url)
+            print( urllib.parse.unquote( response.url ) )
             print('\n')
         return response.json()
     except requests.exceptions.RequestException as e:
