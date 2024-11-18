@@ -16,8 +16,8 @@ logging.basicConfig(level=logging.INFO)
 api_key = os.getenv('API_TOKEN')
 company_id = os.getenv('COMPANY_ID')
 limit = 200
-start_date = '2024-08-01T03:00:00.000Z'
-end_date = '2024-08-08T02:59:00.000Z'
+start_date = '2024-09-01T03:00:00.000Z'
+end_date = '2024-09-10T02:59:00.000Z'
 queues = 'ADagendaCo,ADagendaJu,ADfinan,ADposvendaCo,ADposvendaJu,COcontabilAM,COcontabilES,COcontabilMT,COcontabilRR,COjuridico,SUcontabil,SUcontabilSp,SUescrita,SUescritaSim,SUfolha,SUfolhaDctfF,SUfolhaInteg,SUlegalone,SUtecnica,SUtecnicaOnb,SUtecnicaOnv,SUtecnicaOut,SUtecnicaSer,SUtecOnvMess,SUtecOnvPort'
 
 def fetch_queue_performance(api_token, company_id, start_date, end_date, queues, tme_target, tma_target):
@@ -48,7 +48,7 @@ def fetch_queue_performance(api_token, company_id, start_date, end_date, queues,
     except requests.exceptions.RequestException as e:
         logging.error(f"Error fetching queue performance data: {e}")
 
-def fetch_page(api_token, limit, start_date, end_date, queues, search_after, company_id):
+def fetch_page(api_token, limit, start_date, end_date, queues, search_after0, search_after1, company_id):
     headers = {
         'api_token': api_token
     }
@@ -61,8 +61,9 @@ def fetch_page(api_token, limit, start_date, end_date, queues, search_after, com
         'companyId': company_id
     }
     
-    if search_after:
-        params['searchAfter[]'] = search_after
+    if search_after1:
+        params['searchAfter[0]'] = search_after0 
+        params['searchAfter[1]'] = search_after1
 
     try:
         api_url = 'https://callreport.opens.com.br/call/scroll'
@@ -103,18 +104,20 @@ fetch_queue_performance(api_key, company_id, start_date, end_date, queues, 1200,
 
 # Main loop to fetch data
 fetched_data = []
-search_after = ''
+search_after0 = ''
+search_after1 = ''
 has_more_data = True
 
 while has_more_data:
-    json_data = fetch_page(api_key, limit, start_date, end_date, queues, search_after, company_id)
+    json_data = fetch_page(api_key, limit, start_date, end_date, queues, search_after0, search_after1, company_id)
     
     if json_data and 'data' in json_data and json_data['data']:
         fetched_data.extend(extract_calls(json_data['data']))
 
         # Update searchAfter for next page if available
-        search_after = json_data.get('sort')[0] if json_data.get('sort') else None
-        has_more_data = search_after is not None
+        search_after0 = json_data.get('sort')[0] if json_data.get('sort') else None
+        search_after1 = json_data.get('sort')[1] if json_data.get('sort') else None
+        has_more_data = search_after1 is not None
 
         logging.info(f"Fetched lines so far: {len(fetched_data)}")
         time.sleep(1)  # Respect server rate limits
